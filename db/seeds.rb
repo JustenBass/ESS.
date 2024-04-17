@@ -1,5 +1,5 @@
 puts "Seeding Users...💦"
-user1 = User.create!(username: "JBass636")
+user1 = User.create!(username: "JBass636", password: 'jb', password_confirmation: 'jb')
 
 puts "Seeding Products...💦"
 product1 = Product.create!(name: "IGNITE ELEVATE Spikeless Golf Shoes", img: 'https://www.pumagolf.com/cdn/shop/products/ikssc9e9bqb5y2yjlstf_170d408b-7f31-4f3c-8ea5-51922fb845e9.jpg?v=1702998649',

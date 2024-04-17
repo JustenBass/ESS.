@@ -1,20 +1,21 @@
 class ApplicationController < ActionController::API
     include ActionController::Cookies
-    before_action :set_render_cart
-    before_action :initialize_cart
+    rescue_from ActiveRecord::RecordInvalid, with: :raise_invalid_exception
+    rescue_from ActionController::RecordNotFound, with: :raise_not_found_exception
 
-    def set_render_cart
-        @render_cart = true
+    private
+
+    def authorize
+        @current_user = User.find_by( session[:user_id] )
+        render json: { error: ["Please login to view."] }, status: :unauthorized, unless @current_user
     end
 
-    #This will find a cart whenever we toute through pages if we do not have it
-    def initialize_cart
-        @cart ||= Cart.find_by(id: session[:cart_id])
+    def raise_invalid_exception(invalid)
+        render json: {errors: invalid.record.errors.full_messages}, status: :unprocessable_entity
+      end
 
-        if @cart.nil?
-            @cart = Cart.create
-            session[:cart_id] = @cart.id
-        end
+      def raise_not_found_exception
+        render json: {error: ['Not found']}, status: :not_found
+      end
     end
-
 end
