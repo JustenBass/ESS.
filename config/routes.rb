@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :orderables, only: [ :index ]
   resources :products
 
+  post '/login', to: 'sessions#create'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
