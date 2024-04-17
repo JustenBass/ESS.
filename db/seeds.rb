@@ -2,13 +2,13 @@ puts "Seeding Users...💦"
 user1 = User.create!(username: "JBass636")
 
 puts "Seeding Products...💦"
-product1 = Product.create!(name: "Nike Dunk High Women's Shoes", img: 'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/f0d61cfb-0d85-4d5c-9088-6bae0b15ed04/dunk-high-womens-shoes-LwCxXJ.png',
-description: "Created for the hardwood but taken to the streets, the '80s b-ball icon returns with crisp leather and retro colors. The classic hoops design channels '80s vintage back onto the streets while the padded, high-top collar adds an old-school look rooted to comfort.",
-price: 99.97)
+product1 = Product.create!(name: "IGNITE ELEVATE Spikeless Golf Shoes", img: 'https://www.pumagolf.com/cdn/shop/products/ikssc9e9bqb5y2yjlstf_170d408b-7f31-4f3c-8ea5-51922fb845e9.jpg?v=1702998649',
+description: "The IGNITE ELEVATE will raise your game to the next level providing you with incredible comfort and superb style. So tee-it-up with confidence no matter where the shoes may take you.",
+price: 108.00)
 
-product2 = Product.create!(name: "Nike Blazer Mid '77", img: 'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/7dcc6fd4-b41c-493e-85bd-58b8944b6b1d/blazer-mid-77-womens-shoes-NPWfjm.png',
-description: "Styled for the ‘70s. Loved in the ‘80s. Classic in the ‘90s. Ready for the future. The Nike Blazer Mid ’77 delivers a timeless design that’s easy to wear. Its unbelievably crisp leather upper breaks in beautifully and pairs with bold retro branding and luscious suede accents for a premium feel. Exposed foam on the tongue and a special midsole finish make it look like you’ve just pulled them from the history books. Go ahead, perfect your outfit.",
-price: 105.00)
+product2 = Product.create!(name: "Women's AVANT Spikeless Golf Shoes", img: 'https://www.pumagolf.com/cdn/shop/files/q11pr1uljvppbg4zlwmf.jpg?v=1709674557',
+description: "Built for the future. PUMA AVANT offers a classic style with modern performance details.",
+price: 110.00)
 
 puts "Seeding Carts...💦"
 cart1 = Cart.create!(user_id: user1.id)
