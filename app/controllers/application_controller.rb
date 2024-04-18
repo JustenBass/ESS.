@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::API
+  # protect_from_forgery with: :exception
   include ActionController::Cookies
-
+  before_action :authorize
   rescue_from ActiveRecord::RecordInvalid, with: :raise_invalid_exception
   rescue_from ActiveRecord::RecordNotFound, with: :raise_not_found_exception
-  before_action :authorize
+
 
   private
 

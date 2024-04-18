@@ -52,7 +52,7 @@ export default function () {
                 onChange={ (e) => setPassword(e.target.value)}
             />
 
-            <input type='submit' />
+            <input type="submit" />
         </form>
 
         <h3>{ loginError }</h3>

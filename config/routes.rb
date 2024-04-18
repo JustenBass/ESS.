@@ -1,11 +1,18 @@
 Rails.application.routes.draw do
-  resources :users, only: [ :index ]
-  resources :cart, only: [:show, :create, :destroy]
-  resources :orderables, only: [ :index ]
-  resources :products
+  resources :users, only: [ :index, :show ]
+  resources :carts, only: [:index ]
 
+
+  get 'cart', to: 'carts#show'
+  post 'cart/add'
+  post 'cart/remove'
+  resources :products
+  # root 'products#index'
+
+  post '/signup', to: 'users#create'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  get '/user_profile', to: 'users#show'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

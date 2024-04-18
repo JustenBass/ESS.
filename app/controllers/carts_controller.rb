@@ -1,6 +1,10 @@
 class CartsController < ApplicationController
+  skip_before_action :authorize, only: [:index]
 
-    def show
-        @render_cart = false 
-    end
+
+  def index
+    render json: Cart.all
+  end
+
+  
 end

@@ -5,10 +5,11 @@ import { UserContext } from '../context/user'
 import { ProductContext } from '../context/product'
 import ProductCard from '../components/ProductCard'
 import Login from './Login'
+import Signup from './Signup'
 
 export default function Home() {
     const navigate = useNavigate()
-    const { authenticated, logoutUser } = useContext( UserContext )
+    const { user, authenticated, logoutUser } = useContext( UserContext )
     const { products } = useContext( ProductContext )
 
     const handleUserLogoutUserClick = () => {
@@ -25,6 +26,9 @@ export default function Home() {
     if(authenticated){
         return (
             <div>
+              <div>
+                <h3> Welcome back {user.username} </h3>
+              </div>
                 { products.map((product) => (
                     <ProductCard
                     key={ product.id }
@@ -32,12 +36,23 @@ export default function Home() {
                     />
                 ))}
 
-                <button onClick={ handleUserLogoutUserClick }> Logout </button>
+                <button onClick={ handleUserLogoutUserClick}> LOGOUT </button>
             </div>
           )
         } else {
             return (
+              <div>
                 <Login/>
+                <Signup/>
+                <div>
+                  { products.map((product) => (
+                    <ProductCard
+                    key={ product.id }
+                    product={ product }
+                    />
+                  ))}
+                </div>
+              </div>
             )
         }
 }
