@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./context/user"
 import { ProductProvider } from "./context/product";
-import { OrderableProvider } from "./context/orderable";
+import { OrderProvider } from "./context/order";
+import { GuestCartProvider } from "./context/guest_cart";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 
@@ -15,7 +16,8 @@ function App() {
   return (
     <UserProvider>
       <ProductProvider>
-        <OrderableProvider>
+        <OrderProvider>
+          <GuestCartProvider>
           <BrowserRouter>
                 <div className="App">
                   <Routes>
@@ -24,7 +26,8 @@ function App() {
                   </Routes>
                 </div>
           </BrowserRouter>
-        </OrderableProvider>
+          </GuestCartProvider>
+        </OrderProvider>
        </ProductProvider>
      </UserProvider>
   );
