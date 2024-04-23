@@ -6,6 +6,7 @@ const UserContext = React.createContext()
 function UserProvider({ children }) {
     const [ user, setUser ] = useState( null )
     const [ authenticated, setAuthenticated ] = useState( false )
+    console.log('user', user)
 
     useEffect(() => {
         fetch('/user_profile')

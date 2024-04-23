@@ -6,12 +6,12 @@ class OrdersController < ApplicationController
     end
 
     def create
-        render json: Order.create!(order_params), status: :created 
+       render json: Order.create!(order_params), status: :created
     end
 
     private
 
     def order_params
-        params.permit( :product_id, :cart_id)
+        params.permit( :product_id, :cart_id, :quantity)
     end
 end

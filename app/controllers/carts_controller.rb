@@ -1,20 +1,22 @@
 class CartsController < ApplicationController
-  skip_before_action :authorize, only: [:index, :set_cart, :show]
-  # before_action :set_cart, only: [:show]
-
-
+  skip_before_action :authorize, only: [:index]
   def index
     render json: Cart.all
   end
 
-  def set_cart
-    @guest_cart = Cart.find(params[:id])
-  end
+  # def new
+  #   @cart.new
+  # end
 
+  # def show
+  #   render json: @cart, status: :ok
+  # end
 
-  def show
-    render json: @guest_cart, status: :ok
-  end
+  # def destroy
+  #   @cart.destroy if @cart.id == session[:cart_id]
+  #   session[:cart_id] = nil
+  # end
+
 
 
 end

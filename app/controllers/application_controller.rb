@@ -1,25 +1,24 @@
 class ApplicationController < ActionController::API
   # protect_from_forgery with: :exception
   include ActionController::Cookies
-  before_action :authorize, :guest_cart
+  before_action :authorize
   rescue_from ActiveRecord::RecordInvalid, with: :raise_invalid_exception
   rescue_from ActiveRecord::RecordNotFound, with: :raise_not_found_exception
 
+
+  # def set_cart
+  #   @cart = Cart.find(params[:id])
+  #   if @cart.nil?
+  #     @cart = Cart.create
+  #     session[:cart_id] = @cart.id
+  #   end
+  # end
 
   private
 
   def authorize
     @current_user = User.find_by(id: session[:user_id])
     render json: { error: ["Please login or signup to access all of ESS. features"] }, status: :unauthorized unless @current_user
-  end
-
-  def guest_cart
-    if session[:cart]
-      @guest_cart = Cart.find(session[:cart])
-    else
-      @guest_cart = Cart.create
-      session[:cart] = @guest_cart.id
-    end
   end
 
 

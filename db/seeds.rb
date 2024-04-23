@@ -28,9 +28,9 @@ cart1 = Cart.create!()
 
 
 puts "Seeding Orderables...💦"
-Order.create!(product_id: product1.id, cart_id: cart1.id)
-Order.create!(product_id: product3.id, cart_id: cart1.id)
-Order.create!(product_id: product4.id, cart_id: cart1.id)
+Order.create!(product_id: product1.id, cart_id: cart1.id, quantity: 0)
+Order.create!(product_id: product3.id, cart_id: cart1.id, quantity: 0)
+Order.create!(product_id: product4.id, cart_id: cart1.id, quantity: 0)
 
 
 puts "Done Seeding...🌷"

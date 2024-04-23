@@ -6,8 +6,7 @@ const GuestCartContext = React.createContext()
 
 function GuestCartProvider({ children }) {
     const [ guestCart, setGuestCart ] = useState({})
-    console.log('guest cart products', guestCart.products)
-    console.log('guest cart orders', guestCart.orders)
+    const [ carts, setCarts ] = useState([])
 
 
     useEffect(() =>{
@@ -18,10 +17,18 @@ function GuestCartProvider({ children }) {
         })
     }, [] )
 
+    useEffect(() =>{
+        fetch('/carts')
+        .then((r) => r.json())
+        .then((cart) => {
+            setCarts( cart )
+        })
+    }, [] )
+
 
     return(
         <GuestCartContext.Provider
-        value={{ guestCart }}>
+        value={{ guestCart, setGuestCart, carts, setCarts }}>
             {children}
         </GuestCartContext.Provider>
     )

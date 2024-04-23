@@ -17,7 +17,7 @@ function OrderProvider({ children }) {
     }, [])
 
 
-    const addToUserOrder = (newOrder) => {
+    const addToUserOrder = ( newOrder, user, setUser, carts, setCarts, setProducts ) => {
         fetch('/orders', {
             method: 'POST',
             headers: { 'Content-Type' : 'application/json'},
@@ -27,7 +27,10 @@ function OrderProvider({ children }) {
         .then((order) => {
             console.log('newOrder', order)
             if(!order.errors){
-                setOrders([...orders, order])
+
+                // setUser({...user.cart, products:[...cart.products, order.product]})
+                setUser({...user, cart:{orders:[...orders, order]}})
+
             } else {
                 const orderErr = order.errors.map((error) => <li>{ error }</li>)
                 setOrderErrors(orderErr)
@@ -35,12 +38,13 @@ function OrderProvider({ children }) {
         })
     }
 
-    const addToOrderObj = (product, cart) => {
+    const addToOrderObj = (product, user, setUser, quantity ) => {
         const newOrderObj = {
             product_id: product.id,
-            cart_id: cart.id
+            cart_id: user.cart.id,
+            quantity: quantity
         }
-        addToUserOrder(newOrderObj)
+        addToUserOrder(newOrderObj, user, setUser)
     }
 
     return(
