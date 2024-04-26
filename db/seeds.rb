@@ -3,6 +3,16 @@ user1 = User.create!(username: "JBass636", password: 'jb', password_confirmation
 puts "Seeding Users...💦"
 user2 = User.create!(username: "J", password: 'jb', password_confirmation: 'jb')
 
+
+
+
+puts "Seeding Carts...💦"
+cart1 = Cart.create!()
+
+
+
+
+
 puts "Seeding Products...💦"
 product1 = Product.create!(name: "IGNITE ELEVATE Spikeless Golf Shoes", img: 'https://www.pumagolf.com/cdn/shop/products/ikssc9e9bqb5y2yjlstf_170d408b-7f31-4f3c-8ea5-51922fb845e9.jpg?v=1702998649',
 description: "The IGNITE ELEVATE will raise your game to the next level providing you with incredible comfort and superb style. So tee-it-up with confidence no matter where the shoes may take you.",
@@ -23,14 +33,14 @@ Bisou's bold silhouette belies its petite scale, making the accent chair easy to
 price: 999.00)
 
 
-puts "Seeding Carts...💦"
-cart1 = Cart.create!()
 
 
-puts "Seeding Orderables...💦"
-Order.create!(product_id: product1.id, cart_id: cart1.id, quantity: 0)
-Order.create!(product_id: product3.id, cart_id: cart1.id, quantity: 0)
-Order.create!(product_id: product4.id, cart_id: cart1.id, quantity: 0)
+puts "Seeding OrderItems...💦"
+Order.create!(product_id: product1.id, cart_id: cart1.id, quantity: 4)
+Order.create!(product_id: product2.id, cart_id: cart1.id, quantity: 3)
+
+
+
 
 
 puts "Done Seeding...🌷"

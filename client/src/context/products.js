@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from "react";
-
+import React, { useState, useEffect } from "react";
 
 
 const ProductContext = React.createContext()
@@ -10,8 +9,8 @@ function ProductProvider({ children }) {
     useEffect(() => {
         fetch('/products')
         .then((r) => r.json())
-        .then((productRecords) => {
-            setProducts( productRecords )
+        .then((products) => {
+            setProducts(products)
         })
     }, [])
 
