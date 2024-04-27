@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
     skip_before_action :authorize, only: [:index, :create]
-    skip_before_action :set_cart, only:[:index, :create]
+    
 
     def index
         render json: Order.all
@@ -8,7 +8,7 @@ class OrdersController < ApplicationController
 
 
     def create
-        # order = Order.create!(order_params)
+        product = Product.find(params[:product_id])
         render json: Order.create!(order_params)
     end
 

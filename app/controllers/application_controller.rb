@@ -7,10 +7,6 @@ class ApplicationController < ActionController::API
 
   private
 
-  def authorize
-    @current_user = User.find_by(id: session[:user_id])
-    render json: { error: ["Please login or signup to access all of ESS. features"] }, status: :unauthorized unless @current_user
-  end
 
   def set_cart
     if @current_user
@@ -19,6 +15,10 @@ class ApplicationController < ActionController::API
   end
 end
 
+def authorize
+  @current_user = User.find_by(id: session[:user_id])
+  render json: { error: ["Please login or signup to access all of ESS. features"] }, status: :unauthorized unless @current_user
+end
 
   def raise_invalid_exception(invalid)
     render json: {errors: invalid.record.errors.full_messages}, status: :unprocessable_entity

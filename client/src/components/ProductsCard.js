@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext } from 'react'
 import { UserContext } from '../context/user'
 
 export default function ProductsCard({ product }) {
-  const { user, setUser, authenticated, handleAddToCart } = useContext( UserContext )
+  const { user, setUser, authenticated, handleAddToCart, cart} = useContext( UserContext )
   const [quantity, setQuantity ] = useState(1)
 
 

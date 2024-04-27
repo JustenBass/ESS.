@@ -10,8 +10,8 @@ import ProductsCard from '../components/ProductsCard'
 
 export default function Home() {
     const navigate = useNavigate()
-    const { user, authenticated, logoutUser } = useContext( UserContext )
-    const { products } = useContext( ProductContext )
+    const { user, authenticated, logoutUser, cart} = useContext( UserContext )
+    const { products} = useContext( ProductContext )
 
 
 
@@ -43,7 +43,7 @@ export default function Home() {
               <br/>
               <hr/>
               <h4> Your Cart </h4>
-              { user.cart.products.map((order) => (
+              { cart.orders?.map((order) => (
                 <CartCard
                 key={ order.id }
                 order={ order }

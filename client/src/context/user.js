@@ -5,9 +5,10 @@ const UserContext = React.createContext()
 
 function UserProvider({ children }) {
     const [ user, setUser ] = useState( {} )
-    const [carts, setCarts ] = useState([])
+    const [cart, setCart ] = useState({})
     const [ authenticated, setAuthenticated ] = useState( false )
     console.log('user', user)
+    console.log('cart', cart)
 
 
     useEffect(() => {
@@ -27,12 +28,14 @@ function UserProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        fetch('/carts')
+        fetch('/my_cart')
         .then((r) => r.json())
-        .then((carts) => {
-            setCarts(carts)
+        .then((cart) => {
+            setCart( cart )
         })
-    }, []);
+    }, [])
+
+
 
     const signupUser = (user) => {
         setUser( user )
@@ -59,12 +62,22 @@ function UserProvider({ children }) {
     })
     .then((r) => r.json())
     .then((order) => {
-        if(order){
-        let updateUserCartOrder = {...user, ...user.cart,
-             cart: {...user.cart, orders:[...user.cart.orders, order],
-             products:[...user.cart.products, order.product]}}
-         setUser(updateUserCartOrder)
+
+        // let updateUserCartOrder = {...user, ...user.cart,
+        //      cart: {...user.cart, orders:[...user.cart.orders, order],
+        //      products:[...user.cart.products, order.product]}}
+        //  setUser(updateUserCartOrder)
+
+        let findExistingOrder = cart.orders.find((orderProduct) => orderProduct.product_id === order.product_id)
+
+        if(findExistingOrder){
+            let t = {...findExistingOrder, quantity: findExistingOrder.quantity + order.quantity }
+            setCart({...cart, orders:[...cart.orders, t]})
+
+        } else {
+            setCart({...cart, orders:[...cart.orders, order], products:[...cart.products, order.product]})
         }
+
     })
 
   }
@@ -80,7 +93,7 @@ function UserProvider({ children }) {
 
     return(
         <UserContext.Provider
-        value={{ user, setUser, authenticated, signupUser, loginUser, logoutUser, handleAddToCart }}>
+        value={{ user, setUser, authenticated, signupUser, loginUser, logoutUser, handleAddToCart, cart }}>
             {children}
         </UserContext.Provider>
     )
