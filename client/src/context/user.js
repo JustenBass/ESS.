@@ -8,30 +8,22 @@ function UserProvider({ children }) {
     const [cart, setCart ] = useState({})
     const [ authenticated, setAuthenticated ] = useState( false )
     console.log('user', user)
-    console.log('cart', cart)
-
 
     useEffect(() => {
         fetch('/user_profile')
         .then((r) => r.json())
-        .then((userData) => {
-            if( userData.error ){
-                setAuthenticated( false );
-                // const errorList = userData.error.map((error) => <>{ error }</>)
-                // console.log('error', errorList)
-                // setUserError( errorList );
-            } else {
-                setUser( userData )
-                setAuthenticated( true );
-            }
+        .then((user) => {
+            setUser(user)
+            setAuthenticated(true)
         })
-    }, []);
+    }, [])
 
     useEffect(() => {
         fetch('/my_cart')
         .then((r) => r.json())
-        .then((cart) => {
-            setCart( cart )
+        .then((userCart) => {
+            setCart(userCart)
+            setAuthenticated(true)
         })
     }, [])
 
@@ -54,8 +46,9 @@ function UserProvider({ children }) {
 
 
 
+
   function addToUserCart(newOrder, user, setUser){
-    fetch('/orders', {
+    fetch('/carts', {
       method: 'POST',
       headers: {'Content-Type' : 'application/json'},
       body: JSON.stringify(newOrder)
@@ -63,37 +56,53 @@ function UserProvider({ children }) {
     .then((r) => r.json())
     .then((order) => {
 
-        // let updateUserCartOrder = {...user, ...user.cart,
-        //      cart: {...user.cart, orders:[...user.cart.orders, order],
-        //      products:[...user.cart.products, order.product]}}
-        //  setUser(updateUserCartOrder)
 
-        let findExistingOrder = cart.orders.find((orderProduct) => orderProduct.product_id === order.product_id)
+        let findExisitingOrder = user.cart.orders.find((ord) => ord.product_id === order.product_id)
 
-        if(findExistingOrder){
-            let t = {...findExistingOrder, quantity: findExistingOrder.quantity + order.quantity }
-            setCart({...cart, orders:[...cart.orders, t]})
-
-        } else {
-            setCart({...cart, orders:[...cart.orders, order], products:[...cart.products, order.product]})
+        if (!findExisitingOrder){
+            let updateUserCartOrder = {...user, ...user.cart, cart: {...user.cart, orders:[...user.cart.orders, order], products:[...user.cart.products, order.product]}}
+            setUser(updateUserCartOrder)
         }
-
     })
+}
 
-  }
 
-  const handleAddToCart = (product, user, setUser, quantity) => {
+function updateUserCart(updatedOrder, user, setUser){
+    fetch(`/carts/${user.cart.id}`,{
+        method: 'PATCH',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(updatedOrder)
+    })
+    .then((r) => r.json())
+    .then((order) => {
+        let updateUserCartOrder = user.cart.orders.map((ord) => {
+            if(ord.id === order.id){
+                console.log('wow')
+            }
+        })
+    })
+}
+
+
+  const handleAddToCart = (product, quantity, user, setUser) => {
     const newOrder = {
         product_id: product.id,
-        cart_id: user.cart.id,
         quantity: quantity
     }
     addToUserCart(newOrder, user, setUser)
   }
 
+  const handleUpdateCart = (product, quantity, user, setUser) => {
+    const updatedOrder = {
+        product_id: product.id,
+        quantity: quantity
+    }
+    updateUserCart(updatedOrder, user, setUser)
+  }
+
     return(
         <UserContext.Provider
-        value={{ user, setUser, authenticated, signupUser, loginUser, logoutUser, handleAddToCart, cart }}>
+        value={{ user, setUser, authenticated, signupUser, loginUser, logoutUser, handleAddToCart, handleUpdateCart}}>
             {children}
         </UserContext.Provider>
     )

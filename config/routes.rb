@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :users, only: [ :index, :show ]
-  resources :carts, only: [ :index, :show, :create ]
+  resources :carts, only: [ :index, :show, :create, :update ]
   resources :orders, only: [ :index, :create ]
   resources :products, only: [ :index ]
 
@@ -10,9 +10,11 @@ Rails.application.routes.draw do
   get '/user_profile', to: 'users#show'
   delete '/logout', to: 'sessions#destroy'
 
+
   post '/add', to: 'carts#add'
-  post '/remove', to: 'carts#remove'
+  post '/destroy_cart', to: 'carts#destroy'
   get'/my_cart', to: 'carts#my_cart'
+  get '/visit_count', to: 'products#visit_count'
 
 
 

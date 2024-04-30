@@ -10,8 +10,8 @@ import ProductsCard from '../components/ProductsCard'
 
 export default function Home() {
     const navigate = useNavigate()
-    const { user, authenticated, logoutUser, cart} = useContext( UserContext )
-    const { products} = useContext( ProductContext )
+    const { user, authenticated, logoutUser} = useContext( UserContext )
+    const { products, count} = useContext( ProductContext )
 
 
 
@@ -39,11 +39,13 @@ export default function Home() {
                 product={ product }
                 />
               ))}
-              <button onClick={() => handleUserLogoutUserClick()}> Logout </button>
+              <button onClick={() => {
+                handleUserLogoutUserClick()
+              }}> Logout </button>
               <br/>
               <hr/>
               <h4> Your Cart </h4>
-              { cart.orders?.map((order) => (
+              { user.cart?.orders.map((order) => (
                 <CartCard
                 key={ order.id }
                 order={ order }
@@ -56,6 +58,14 @@ export default function Home() {
               <div>
                 <Login/>
                 <Signup/>
+                <br/>
+                { products.map((product) => (
+                <ProductsCard
+                key={ product.id }
+                product={ product }
+                />
+              ))}
+
               </div>
             )
         }

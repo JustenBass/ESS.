@@ -1,18 +1,27 @@
 class Cart < ApplicationRecord
-    belongs_to :user, optional: true
+    belongs_to :user
     has_many :orders
     has_many :products, through: :orders
 
 
-    def add_product(product_id)
-        current_order = orders.find_by(product_id: product_id)
-        if current_order
-            current_order.quantity += 1
-        else
-            current_order = orders.build(product_id: product_id)
-        end
+    def add_order_to_cart(product, quantity)
+       if current_order = self.orders.find_by(product_id: product.id)
+        current_order.quantity += quantity
+        current_order.save
         current_order
+       else
+        self.orders.create!(product_id: product.id, quantity: quantity)
+       end
     end
+
+    def update_order_cart_quantity(product, quantity)
+        if current_order = self.orders.find_by(product_id: product.id)
+            current_order.update!(quantity: quantity)
+        end
+    end
+
+
+    def
 
 
     def total

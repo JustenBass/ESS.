@@ -6,8 +6,8 @@ user2 = User.create!(username: "J", password: 'jb', password_confirmation: 'jb')
 
 
 
-puts "Seeding Carts...💦"
-cart1 = Cart.create!()
+# puts "Seeding Carts...💦"
+# cart1 = Cart.create!()
 
 
 
@@ -35,9 +35,9 @@ price: 999.00)
 
 
 
-puts "Seeding OrderItems...💦"
-Order.create!(product_id: product1.id, cart_id: cart1.id, quantity: 4)
-Order.create!(product_id: product2.id, cart_id: cart1.id, quantity: 3)
+# puts "Seeding OrderItems...💦"
+# Order.create!(product_id: product1.id, cart_id: cart1.id, quantity: 4)
+# Order.create!(product_id: product2.id, cart_id: cart1.id, quantity: 3)
 
 
 
