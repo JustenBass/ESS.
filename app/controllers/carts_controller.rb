@@ -1,5 +1,5 @@
 class CartsController < ApplicationController
-    skip_before_action :authorize, only: [:index]
+    skip_before_action :authorize, only: [:index ]
   #   before_action :set_cart, only: [:create]
 
 
@@ -13,10 +13,16 @@ class CartsController < ApplicationController
     render json: @cart.add_order_to_cart(product, quantity )
   end
 
-  def update
-    product = Product.find(params[:product_id])
+  def update_cart
+    order = @cart.orders.find_by(id: params[:id])
     quantity = params[:quantity]
-    render json: @cart.update_order_cart_quantity(product, quantity)
+    update_order_quantity = order.quantity + quantity
+    order.update!(quantity: update_order_quantity)
+    render json: @cart
+  end
+
+  def cart_total
+    render json: @cart.total.to_i
   end
 
 

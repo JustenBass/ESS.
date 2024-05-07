@@ -1,53 +1,92 @@
 import React, { useState, useEffect } from "react";
+import swal from 'sweetalert';
 
 
 const UserContext = React.createContext()
 
 function UserProvider({ children }) {
     const [ user, setUser ] = useState( {} )
-    const [cart, setCart ] = useState({})
-    const [ authenticated, setAuthenticated ] = useState( false )
-    console.log('user', user)
+    const [cart, setCart ] = useState(null)
+    const [cartTotal, setCartTotal] = useState(null)
+    const [ isAuthenticated, setIsAuthenticated ] = useState( false )
+    const [ welcome, setWelcome ] = useState( true )
+    console.log('Cart Total', cartTotal)
+
+
+    const loginUser = ( user ) => {
+        setUser( user )
+        setCart( user.cart )
+        setIsAuthenticated( true )
+        setWelcome( true )
+    }
+
+    const signupUser = (user) => {
+        setUser( user )
+        setCart( user.cart )
+        setWelcome( false )
+        setIsAuthenticated( true )
+    }
+
 
     useEffect(() => {
         fetch('/user_profile')
         .then((r) => r.json())
-        .then((user) => {
-            setUser(user)
-            setAuthenticated(true)
+        .then((userData) => {
+            if(userData.error){
+                setIsAuthenticated( false )
+            } else {
+                setUser(userData)
+                setCart(userData.cart)
+                setIsAuthenticated(true)
+            }
         })
     }, [])
+
 
     useEffect(() => {
         fetch('/my_cart')
         .then((r) => r.json())
         .then((userCart) => {
             setCart(userCart)
-            setAuthenticated(true)
+            // setIsAuthenticated(true)
+        })
+    }, [])
+
+    useEffect(() => {
+        fetch('/cart_total')
+        .then((r) => r.json())
+        .then((total) => {
+            setCartTotal(total)
         })
     }, [])
 
 
 
-    const signupUser = (user) => {
-        setUser( user )
-        setAuthenticated( true )
-    }
-
-    const loginUser = ( user ) => {
-        setUser( user )
-        setAuthenticated( true )
-    }
 
     const logoutUser = () => {
         setUser( null )
-        setAuthenticated( false )
+        setCart(null)
+        setCartTotal(null)
+        setIsAuthenticated( false )
       };
 
 
 
+    function updateUserCart(order){
+    fetch('/update_cart',{
+        method: 'PATCH',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(order)
+    })
+    .then((r) => r.json())
+    .then((updatedCart) => {
+        setCart(updatedCart)
+        swal('The quantity of your existing cart item has been updated.')
+      })
 
-  function addToUserCart(newOrder, user, setUser){
+}
+
+  function addToUserCart(newOrder){
     fetch('/carts', {
       method: 'POST',
       headers: {'Content-Type' : 'application/json'},
@@ -57,52 +96,37 @@ function UserProvider({ children }) {
     .then((order) => {
 
 
-        let findExisitingOrder = user.cart.orders.find((ord) => ord.product_id === order.product_id)
+        let findExisitingOrder = cart.orders.find((ord) => ord.product_id === order.product_id)
 
         if (!findExisitingOrder){
-            let updateUserCartOrder = {...user, ...user.cart, cart: {...user.cart, orders:[...user.cart.orders, order], products:[...user.cart.products, order.product]}}
-            setUser(updateUserCartOrder)
+            let updateUserCartOrder = {...cart, orders:[...cart.orders, order], products:[...cart.products, order.product]}
+            setCart(updateUserCartOrder)
+            setCartTotal(updateUserCartOrder.total)
+            // swal('Item added to cart.')
+            // setCartTotal(order.total)
+        } else {
+            const exisitingOrder = {
+                id: findExisitingOrder.id,
+                quantity: newOrder.quantity
+            }
+            updateUserCart(exisitingOrder)
         }
     })
 }
 
 
-function updateUserCart(updatedOrder, user, setUser){
-    fetch(`/carts/${user.cart.id}`,{
-        method: 'PATCH',
-        headers: {'Content-Type' : 'application/json'},
-        body: JSON.stringify(updatedOrder)
-    })
-    .then((r) => r.json())
-    .then((order) => {
-        let updateUserCartOrder = user.cart.orders.map((ord) => {
-            if(ord.id === order.id){
-                console.log('wow')
-            }
-        })
-    })
-}
-
-
-  const handleAddToCart = (product, quantity, user, setUser) => {
+  const handleAddToCart = (product, quantity) => {
     const newOrder = {
         product_id: product.id,
         quantity: quantity
     }
-    addToUserCart(newOrder, user, setUser)
+    addToUserCart(newOrder)
   }
 
-  const handleUpdateCart = (product, quantity, user, setUser) => {
-    const updatedOrder = {
-        product_id: product.id,
-        quantity: quantity
-    }
-    updateUserCart(updatedOrder, user, setUser)
-  }
 
     return(
         <UserContext.Provider
-        value={{ user, setUser, authenticated, signupUser, loginUser, logoutUser, handleAddToCart, handleUpdateCart}}>
+        value={{ isAuthenticated, user, setUser, signupUser, loginUser, logoutUser, handleAddToCart, cart, welcome, cartTotal}}>
             {children}
         </UserContext.Provider>
     )

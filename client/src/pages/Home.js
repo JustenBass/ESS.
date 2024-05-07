@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { UserContext } from '../context/user'
@@ -10,8 +10,8 @@ import ProductsCard from '../components/ProductsCard'
 
 export default function Home() {
     const navigate = useNavigate()
-    const { user, authenticated, logoutUser} = useContext( UserContext )
-    const { products, count} = useContext( ProductContext )
+    const {isAuthenticated, user, logoutUser, cart, welcome, cartTotal } = useContext( UserContext )
+    const { products } = useContext( ProductContext )
 
 
 
@@ -26,11 +26,26 @@ export default function Home() {
         });
       };
 
-    if(authenticated){
+    if(!isAuthenticated){
         return (
-            <div>
+          <div>
+          <Login/>
+          <Signup/>
+          <br/>
+          { products.map((product) => (
+          <ProductsCard
+          key={ product.id }
+          product={ product }
+          />
+        ))}
+
+        </div>
+          )
+        } else {
+            return (
               <div>
-                <h3> Welcome back {user.username} </h3>
+              <div>
+                {welcome ? <h3> Welcome back {user.username} </h3> : <h3> Welcome to ESS. {user.username}! We're happy to have you! </h3>}
               </div>
               <br/>
               { products.map((product) => (
@@ -39,34 +54,19 @@ export default function Home() {
                 product={ product }
                 />
               ))}
-              <button onClick={() => {
-                handleUserLogoutUserClick()
-              }}> Logout </button>
+              <button onClick={ handleUserLogoutUserClick }> Logout </button>
               <br/>
               <hr/>
               <h4> Your Cart </h4>
-              { user.cart?.orders.map((order) => (
+              { cart.orders?.map((order) => (
                 <CartCard
                 key={ order.id }
                 order={ order }
                 />
               ))}
+              <h1>{cart.total}</h1>
             </div>
-          )
-        } else {
-            return (
-              <div>
-                <Login/>
-                <Signup/>
-                <br/>
-                { products.map((product) => (
-                <ProductsCard
-                key={ product.id }
-                product={ product }
-                />
-              ))}
 
-              </div>
             )
         }
 }

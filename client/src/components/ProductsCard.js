@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext } from 'react'
 import { UserContext } from '../context/user'
 
 export default function ProductsCard({ product }) {
-  const { user, setUser, handleAddToCart, handleUpdateCart} = useContext( UserContext )
+  const { user, setUser, handleAddToCart} = useContext( UserContext )
   const [quantity, setQuantity ] = useState(1)
 
 
@@ -12,7 +12,7 @@ export default function ProductsCard({ product }) {
   }
 
   const handleDecrement = () =>{
-    if(quantity >= 1){
+    if(quantity >= 2){
       setQuantity( quantity - 1 )
     }
   }
@@ -31,7 +31,7 @@ export default function ProductsCard({ product }) {
           <br/>
           <button onClick={() => {
            handleAddToCart(product, quantity, user, setUser)
-           handleUpdateCart(product, quantity, user, setUser)
+           setQuantity(1)
 
           }}> Add </button>
       </div>

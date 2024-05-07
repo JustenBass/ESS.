@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :users, only: [ :index, :show ]
+  resources :users, only: [ :index ]
   resources :carts, only: [ :index, :show, :create, :update ]
-  resources :orders, only: [ :index, :create ]
+  resources :orders, only: [ :index, :create, :update]
   resources :products, only: [ :index ]
 
 
@@ -14,17 +14,18 @@ Rails.application.routes.draw do
   post '/add', to: 'carts#add'
   post '/destroy_cart', to: 'carts#destroy'
   get'/my_cart', to: 'carts#my_cart'
-  get '/visit_count', to: 'products#visit_count'
+  get '/cart_total', to: 'carts#cart_total'
+    patch '/update_cart', to: 'carts#update_cart'
 
 
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+    # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get '*path',
-  to: 'fallback#index',
-  constraints: ->(req) { !req.xhr? && req.format.html? }
+    # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+    # Can be used by load balancers and uptime monitors to verify that the app is live.
+    get '*path',
+    to: 'fallback#index',
+    constraints: ->(req) { !req.xhr? && req.format.html? }
 
 
   # Defines the root path route ("/")

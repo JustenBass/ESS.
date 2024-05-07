@@ -6,25 +6,15 @@ class Cart < ApplicationRecord
 
     def add_order_to_cart(product, quantity)
        if current_order = self.orders.find_by(product_id: product.id)
-        current_order.quantity += quantity
-        current_order.save
         current_order
        else
         self.orders.create!(product_id: product.id, quantity: quantity)
        end
     end
 
-    def update_order_cart_quantity(product, quantity)
-        if current_order = self.orders.find_by(product_id: product.id)
-            current_order.update!(quantity: quantity)
-        end
-    end
-
-
-    def
 
 
     def total
-        orders.to_a.sum{|order| order.total }
+        orders.sum {|order| order.total }
     end
 end

@@ -2,9 +2,12 @@ import React from 'react'
 import { useContext } from 'react'
 import { ProductContext } from '../context/products'
 
+
 export default function CartCard({ order }) {
 
     const { products } = useContext( ProductContext )
+
+
 
     let findOrderProduct = products.find((product) => product.id === order.product_id)
 
