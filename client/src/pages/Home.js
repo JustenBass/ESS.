@@ -10,9 +10,8 @@ import ProductsCard from '../components/ProductsCard'
 
 export default function Home() {
     const navigate = useNavigate()
-    const {isAuthenticated, user, logoutUser, cart, welcome, cartTotal } = useContext( UserContext )
+    const {isAuthenticated, welcome, user, userCart, cartTotal, logoutUser} = useContext( UserContext )
     const { products } = useContext( ProductContext )
-
 
 
     const handleUserLogoutUserClick = () => {
@@ -26,47 +25,51 @@ export default function Home() {
         });
       };
 
+
     if(!isAuthenticated){
         return (
-          <div>
-          <Login/>
-          <Signup/>
-          <br/>
-          { products.map((product) => (
-          <ProductsCard
-          key={ product.id }
-          product={ product }
-          />
-        ))}
-
-        </div>
-          )
+              <div>
+                <Login/>
+                <Signup/>
+                <br/>
+                { products.map((product) => (
+                  <ProductsCard
+                  key={ product.id }
+                  product={ product }
+                  />
+              ))}
+          </div>
+        )
         } else {
             return (
               <div>
-              <div>
-                {welcome ? <h3> Welcome back {user.username} </h3> : <h3> Welcome to ESS. {user.username}! We're happy to have you! </h3>}
-              </div>
-              <br/>
-              { products.map((product) => (
-                <ProductsCard
-                key={ product.id }
-                product={ product }
-                />
-              ))}
-              <button onClick={ handleUserLogoutUserClick }> Logout </button>
-              <br/>
-              <hr/>
-              <h4> Your Cart </h4>
-              { cart.orders?.map((order) => (
-                <CartCard
-                key={ order.id }
-                order={ order }
-                />
-              ))}
-              <h1>{cart.total}</h1>
-            </div>
+                <div>
+                  {welcome ? <h3> Welcome back { user.username }! </h3> : <h3> Welcome to ESS. { user.username }! We're happy to have you! </h3>}
+                </div>
 
+                <br/>
+
+                { products.map((product) => (
+                    <ProductsCard
+                    key={ product.id }
+                    product={ product }
+                    />
+                ))}
+                <button onClick={ handleUserLogoutUserClick }> Logout </button>
+
+                <br/>
+                <hr/>
+
+                <h4> Your Cart </h4>
+                { userCart.orders.map((order) => (
+                    <CartCard
+                    key={ order.id }
+                    order={ order }
+                    />
+                ))}
+                
+                <h1>Total: ${ cartTotal }</h1>
+            </div>
             )
+          }
         }
-}

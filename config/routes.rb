@@ -13,9 +13,10 @@ Rails.application.routes.draw do
 
   post '/add', to: 'carts#add'
   post '/destroy_cart', to: 'carts#destroy'
-  get'/my_cart', to: 'carts#my_cart'
+  get'/user_cart', to: 'carts#user_cart'
   get '/cart_total', to: 'carts#cart_total'
-    patch '/update_cart', to: 'carts#update_cart'
+  patch '/update_cart', to: 'carts#update_cart'
+  patch '/update_cart_total', to: 'carts#update_cart_total'
 
 
 

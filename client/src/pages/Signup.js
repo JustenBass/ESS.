@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Signup() {
     const { signupUser } = useContext( UserContext )
-    const [ username, setUserName ] = useState( '')
-    const [ password, setPassword ] = useState( '')
-    const [ passwordConfirmation, setPasswordConfirmation ] = useState( '')
+    const [ username, setUserName ] = useState( '' )
+    const [ password, setPassword ] = useState( '' )
+    const [ passwordConfirmation, setPasswordConfirmation ] = useState( '' )
     const [ signUpErrors, setSignupErrors ] = useState( '' )
     const navigate = useNavigate()
 
@@ -27,8 +27,8 @@ export default function Signup() {
         .then((r) => r.json())
         .then((user) => {
             if(!user.errors){
-                signupUser(user)
-                navigate('/')
+                signupUser( user )
+                navigate( '/' )
             } else {
                 const userError = user.errors.map((error) => <li>{ error }</li>)
                 setSignupErrors( userError )
@@ -36,7 +36,7 @@ export default function Signup() {
         })
     }
 
-
+    
   return (
     <div>
         <form onSubmit={ handleSubmit }>

@@ -2,13 +2,12 @@ import React, {useState, useEffect, useContext } from 'react'
 import { UserContext } from '../context/user'
 
 export default function ProductsCard({ product }) {
-  const { user, setUser, handleAddToCart} = useContext( UserContext )
-  const [quantity, setQuantity ] = useState(1)
-
+  const { handleAddToCartParams } = useContext( UserContext )
+  const [quantity, setQuantity ] = useState( 1 )
 
 
   const handleIncrement = () => {
-    setQuantity( quantity + 1)
+    setQuantity( quantity + 1 )
   }
 
   const handleDecrement = () =>{
@@ -23,16 +22,15 @@ export default function ProductsCard({ product }) {
           <img src={ product.img } width='250' height='250'/>
           <h2>${ product.price }</h2>
 
-          <button onClick={ () => handleDecrement()}> - </button>
+          <button onClick={ () => handleDecrement() }> - </button>
           <br/>
           <h3>{ quantity }</h3>
           <br/>
-          <button onClick={ () => handleIncrement()}> + </button>
+          <button onClick={ () => handleIncrement() }> + </button>
           <br/>
           <button onClick={() => {
-           handleAddToCart(product, quantity, user, setUser)
+           handleAddToCartParams(product, quantity)
            setQuantity(1)
-
           }}> Add </button>
       </div>
     )

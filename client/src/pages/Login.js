@@ -10,6 +10,7 @@ export default function () {
     const [loginError, setLoginError ] = useState('')
     const navigate = useNavigate()
 
+
     function handleLoginSubmit(e){
         e.preventDefault()
         fetch('/login', {
@@ -24,17 +25,17 @@ export default function () {
         .then((user) => {
             if(!user.error){
                 loginUser ( user )
-                navigate('/')
+                navigate( '/' )
             } else {
                 const userError = user.error.map((error) => <>{ error }</>)
                 setLoginError( userError )
-                setUsername('')
-                setPassword('')
+                setUsername( '' )
+                setPassword( '' )
             }
         })
     }
 
-
+    
   return (
     <div>
         <form onSubmit={ handleLoginSubmit }>
@@ -42,14 +43,14 @@ export default function () {
                 placeholder='Username...'
                 id='username'
                 value={ username }
-                onChange={ (e) => setUsername(e.target.value)}
+                onChange={ (e) => setUsername(e.target.value) }
             />
 
             <input
                 placeholder='Password...'
                 id='password'
                 value={ password }
-                onChange={ (e) => setPassword(e.target.value)}
+                onChange={ (e) => setPassword(e.target.value) }
             />
 
             <input type="submit" />

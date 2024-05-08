@@ -5,52 +5,54 @@ import swal from 'sweetalert';
 const UserContext = React.createContext()
 
 function UserProvider({ children }) {
-    const [ user, setUser ] = useState( {} )
-    const [cart, setCart ] = useState(null)
-    const [cartTotal, setCartTotal] = useState(null)
-    const [ isAuthenticated, setIsAuthenticated ] = useState( false )
     const [ welcome, setWelcome ] = useState( true )
-    console.log('Cart Total', cartTotal)
+    const [ user, setUser ] = useState( null )
+    const [ isAuthenticated, setIsAuthenticated ] = useState( false )
+    const [userCart, setUserCart ] = useState(null)
+    const [cartTotal, setCartTotal] = useState(null)
 
 
     const loginUser = ( user ) => {
         setUser( user )
-        setCart( user.cart )
         setIsAuthenticated( true )
+        setUserCart ( user.cart )
+        setCartTotal(user.cart.total)
         setWelcome( true )
     }
 
+
     const signupUser = (user) => {
         setUser( user )
-        setCart( user.cart )
-        setWelcome( false )
         setIsAuthenticated( true )
+        setUserCart ( user.cart )
+        setCartTotal(user.cart.total)
+        setWelcome( false )
     }
 
 
     useEffect(() => {
         fetch('/user_profile')
         .then((r) => r.json())
-        .then((userData) => {
-            if(userData.error){
+        .then((user) => {
+            if(user.error){
                 setIsAuthenticated( false )
             } else {
-                setUser(userData)
-                setCart(userData.cart)
+                setUser(user)
                 setIsAuthenticated(true)
+                setUserCart(user.cart)
             }
         })
     }, [])
 
 
     useEffect(() => {
-        fetch('/my_cart')
+        fetch('/user_cart')
         .then((r) => r.json())
         .then((userCart) => {
-            setCart(userCart)
-            // setIsAuthenticated(true)
+            setUserCart (userCart)
         })
     }, [])
+
 
     useEffect(() => {
         fetch('/cart_total')
@@ -58,18 +60,28 @@ function UserProvider({ children }) {
         .then((total) => {
             setCartTotal(total)
         })
-    }, [])
-
-
+    },[])
 
 
     const logoutUser = () => {
         setUser( null )
-        setCart(null)
-        setCartTotal(null)
         setIsAuthenticated( false )
+        setUserCart(null)
+        setCartTotal(null)
       };
 
+
+      function updateUserCartTotal(cart){
+        fetch('/update_cart_total',{
+            method: 'PATCH',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(cart)
+        })
+        .then((r) => r.json())
+        .then((updatedTotal) => {
+            setCartTotal(updatedTotal)
+          })
+        }
 
 
     function updateUserCart(order){
@@ -79,12 +91,13 @@ function UserProvider({ children }) {
         body: JSON.stringify(order)
     })
     .then((r) => r.json())
-    .then((updatedCart) => {
-        setCart(updatedCart)
-        swal('The quantity of your existing cart item has been updated.')
+    .then((updatedUserCart) => {
+        setUserCart(updatedUserCart)
+        updateUserCartTotal(updatedUserCart)
+        swal(`You've added ${order.product_name}. You're cart total is now $${updatedUserCart.total}`)
       })
+    }
 
-}
 
   function addToUserCart(newOrder){
     fetch('/carts', {
@@ -95,19 +108,18 @@ function UserProvider({ children }) {
     .then((r) => r.json())
     .then((order) => {
 
+        let findExisitingCartOrder = userCart.orders.find((ord) => ord.product_id === order.product_id)
 
-        let findExisitingOrder = cart.orders.find((ord) => ord.product_id === order.product_id)
-
-        if (!findExisitingOrder){
-            let updateUserCartOrder = {...cart, orders:[...cart.orders, order], products:[...cart.products, order.product]}
-            setCart(updateUserCartOrder)
-            setCartTotal(updateUserCartOrder.total)
-            // swal('Item added to cart.')
-            // setCartTotal(order.total)
+        if (!findExisitingCartOrder){
+            let updateUserCart = {...userCart, orders:[...userCart.orders, order], products:[...userCart.products, order.product]}
+            setUserCart(updateUserCart)
+            updateUserCartTotal(updateUserCart)
+            swal(`You've added ${order.product_name}. You're cart total is now $${order.cart_total}`)
         } else {
             const exisitingOrder = {
-                id: findExisitingOrder.id,
-                quantity: newOrder.quantity
+                id: findExisitingCartOrder.id,
+                quantity: newOrder.quantity,
+                product_name: order.product_name
             }
             updateUserCart(exisitingOrder)
         }
@@ -115,7 +127,7 @@ function UserProvider({ children }) {
 }
 
 
-  const handleAddToCart = (product, quantity) => {
+  const handleAddToCartParams = (product, quantity) => {
     const newOrder = {
         product_id: product.id,
         quantity: quantity
@@ -126,7 +138,7 @@ function UserProvider({ children }) {
 
     return(
         <UserContext.Provider
-        value={{ isAuthenticated, user, setUser, signupUser, loginUser, logoutUser, handleAddToCart, cart, welcome, cartTotal}}>
+        value={{ isAuthenticated, welcome, user, setUser, userCart, cartTotal, signupUser, loginUser, logoutUser, handleAddToCartParams}}>
             {children}
         </UserContext.Provider>
     )

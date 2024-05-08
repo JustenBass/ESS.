@@ -4,13 +4,12 @@ import { ProductContext } from '../context/products'
 
 
 export default function CartCard({ order }) {
-
     const { products } = useContext( ProductContext )
-
 
 
     let findOrderProduct = products.find((product) => product.id === order.product_id)
 
+    
   return (
     <div>
         <h3>{ findOrderProduct?.name }</h3>

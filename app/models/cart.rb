@@ -15,6 +15,6 @@ class Cart < ApplicationRecord
 
 
     def total
-        orders.sum {|order| order.total }
+        orders.to_a.sum {|order| order.total }
     end
 end
